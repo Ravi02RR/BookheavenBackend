@@ -1,16 +1,20 @@
 const { Router } = require('express');
 const userRouter = Router();
+// const UserService = require('../controller/user.controller.js');
+const userAuthMiddleware = require('../middleware/user.middleware.js');
 
 //=============================ROUTES=============================
-userRouter.get('/signup', (req, res) => {
-    res.send('Signup Page');
-});
+userRouter.post('/signup', async (req, res) => {
+    const userService = new UserService();
+    const user = await userService.createUser(req.body);
+    res.json(user);
+})
 
 userRouter.post('/signin', (req, res) => {
     res.send('Signin Page');
 });
 
-userRouter.post('/purchase', (req, res) => {
+userRouter.post('/purchase', userAuthMiddleware, (req, res) => {
     res.send('Purchase Page');
 });
 

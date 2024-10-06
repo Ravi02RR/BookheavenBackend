@@ -1,9 +1,9 @@
 const { Router } = require('express');
-const genralController = require('../controller/genral.controller');
+const genralServie = require('../controller/genral.controller.js')
 
 const genralRouter = Router();
 
 //=============================ROUTES=============================
-genralRouter.get('/', genralController.genralController); 
+genralRouter.get('/', genralServie.get);
 
 module.exports = genralRouter;

@@ -6,6 +6,9 @@ let config = {
     },
     db: {
         mongo: process.env.MONGODB_URIrs
+    },
+    jwt: {
+        secret: process.env.JWT_SECRET
     }
 }
 
