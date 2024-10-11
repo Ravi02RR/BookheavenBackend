@@ -1,13 +1,25 @@
 const { Router } = require('express');
 const adminRouter = Router();
+const zod = require('zod');
 
-const adminModel=require('../models/admin.model.js');
+const adminModel = require('../models/admin.model.js');
 
 
 
 //=============================ROUTES=============================
 adminRouter.get('/signup', (req, res) => {
-    res.send('Signup Page');
+    let adminData = req.body;
+    const adminSchema = zod.object({
+        name: zod.string(),
+        email: zod.string().email(),
+        password: zod.string().min(6),
+    });
+    try {
+
+    } catch (err) {
+
+    }
+
 });
 
 adminRouter.post('/signin', (req, res) => {

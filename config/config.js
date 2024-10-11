@@ -9,6 +9,9 @@ let config = {
     },
     jwt: {
         secret: process.env.JWT_SECRET
+    },
+    bcryptsalt: {
+        salt: parseInt(process.env.SALT)
     }
 }
 
