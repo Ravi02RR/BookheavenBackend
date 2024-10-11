@@ -1,16 +1,21 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/config.js');
-function userAuthMiddleware(req, res, next) {
-    try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decoded = jwt.verify(token, config.jwt);
-        req.user = decoded;
-        next();
 
-    } catch (err) {
-        res.status(401).json({
-            message: "User not authenticated"
+const userAuth = (req, res, next) => {
+    const token = req.header('token');
+    const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decodedData) {
+        req.userId = decodedData.id;
+        next();
+    }
+
+    else {
+        res.status(403).json({
+            message: "Unauthorized user"
         })
     }
+
+
 }
-module.exports = userAuthMiddleware;
+
+module.exports = userAuth;

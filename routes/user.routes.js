@@ -5,6 +5,7 @@ const userModel = require('../models/user.model.js');
 const userAuthMiddleware = require('../middleware/user.middleware.js');
 const bcrypt = require('bcrypt');
 const config = require('../config/config.js');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -64,8 +65,39 @@ userRouter.post('/signup', async (req, res) => {
 });
 
 
-userRouter.post('/signin', (req, res) => {
-    res.send('Signin Page');
+userRouter.post('/signin', async (req, res) => {
+    try {
+        let { email, password } = req.body;
+        let user = await userModel.findOne({
+            email
+        })
+        if (user) {
+            let match = await bcrypt.compare(password, user.password);
+            if (match) {
+                let token = jwt.sign({
+                    email: user.email, id: user._id,
+                    name: user.name
+                }, config.jwt.secret, { expiresIn: '1h' });
+                res.status(200).json({
+                    message: "User signed in successfully",
+                    token
+                });
+            } else {
+                res.status(401).json({
+                    message: "Invalid credentials"
+                });
+            }
+        }
+        else {
+            res.status(404).json({
+                message: "User not found"
+            });
+        }
+    }
+    catch (err) {
+        console.error('Signin error:', err);
+        res.status(500).json({ error: "An error occurred during signin" });
+    }
 });
 
 userRouter.post('/purchase', userAuthMiddleware, (req, res) => {
