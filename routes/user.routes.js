@@ -36,6 +36,14 @@ userRouter.post('/signup', async (req, res) => {
         let securePass = await hashedPassword(password);
 
         // Create the user in the database
+        const cheackUser = await userModel.findOne(({ email }))
+        if (cheackUser) {
+            res.status(400).json({
+                message: "User already exists"
+            });
+            return;
+        }
+
         await userModel.create({ name, email, password: securePass });
 
         res.status(201).json({
@@ -75,9 +83,10 @@ userRouter.post('/signin', async (req, res) => {
             let match = await bcrypt.compare(password, user.password);
             if (match) {
                 let token = jwt.sign({
-                    email: user.email, id: user._id,
+                    email: user.email,
+                    id: user._id,
                     name: user.name
-                }, config.jwt.secret, { expiresIn: '1h' });
+                }, config.jwt.user, { expiresIn: '1h' });
                 res.status(200).json({
                     message: "User signed in successfully",
                     token

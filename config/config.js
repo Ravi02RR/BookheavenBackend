@@ -8,13 +8,11 @@ let config = {
         mongo: process.env.MONGODB_URIrs
     },
     jwt: {
-        secret: process.env.JWT_SECRET_FOR_USER
+        user: process.env.JWT_SECRET_FOR_USER,
+        admin: process.env.JWT_SECRET_FOR_ADMIN
     },
     bcryptsalt: {
         salt: parseInt(process.env.SALT)
-    },
-    adminJwt: {
-        secret: process.env.JWT_SECRET_FOR_ADMIN
     }
 }
 
