@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.js');
 
-const userAuth = (req, res, next) => {
+const userAuthMiddleware = (req, res, next) => {
     const token = req.header('token');
     const decodedData = jwt.verify(token, config.jwt.user);
 
@@ -18,4 +18,4 @@ const userAuth = (req, res, next) => {
 
 }
 
-module.exports = userAuth;
+module.exports = userAuthMiddleware;

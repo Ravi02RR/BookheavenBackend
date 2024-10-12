@@ -74,6 +74,7 @@ adminRouter.post('/signup', async (req, res) => {
     }
 });
 
+//=============================ROUTES=============================
 
 adminRouter.post('/signin', async (req, res) => {
     try {
@@ -110,6 +111,7 @@ adminRouter.post('/signin', async (req, res) => {
         res.status(500).json({ error: "An error occurred during signin" });
     }
 });
+//=============================ROUTES=============================
 
 adminRouter.post('/create', adminAuthMiddleware, async (req, res) => {
     const adminId = req.userID;
@@ -136,6 +138,7 @@ adminRouter.put('/course', adminAuthMiddleware, async (req, res) => {
     const adminId = req.userID;
     const courseData = { title, description, price, imageUrl, courseId } = req.body;
     try {
+
         const course = await courseModel.findOneAndUpdate({ _id: courseId, creatorId: adminId }, {
             ...courseData
         }, { new: true });
@@ -153,6 +156,7 @@ adminRouter.put('/course', adminAuthMiddleware, async (req, res) => {
         res.status(500).json({ error: "An error occurred during course update" });
     }
 })
+//=============================ROUTES=============================
 adminRouter.get('/course/bulk', adminAuthMiddleware, async (req, res) => {
     try {
         const adminId = req.userID;
