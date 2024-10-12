@@ -132,11 +132,41 @@ adminRouter.post('/create', adminAuthMiddleware, async (req, res) => {
     }
 
 });
-adminRouter.put('/create', (req, res) => {
-    res.send('Purchase Page');
+adminRouter.put('/course', adminAuthMiddleware, async (req, res) => {
+    const adminId = req.userID;
+    const courseData = { title, description, price, imageUrl, courseId } = req.body;
+    try {
+        const course = await courseModel.findOneAndUpdate({ _id: courseId, creatorId: adminId }, {
+            ...courseData
+        }, { new: true });
+        if (!course) {
+            res.status(404).json({ error: "Course not found" });
+            return;
+        }
+        res.status(200).json({
+            message: "Course updated successfully",
+            data: course
+        });
+
+    } catch (err) {
+        console.error('Course update error:', err);
+        res.status(500).json({ error: "An error occurred during course update" });
+    }
 })
-adminRouter.get('/course/bulk', (req, res) => [
-    res.send('Bulk Course Page')
-])
+adminRouter.get('/course/bulk', adminAuthMiddleware, async (req, res) => {
+    try {
+        const adminId = req.userID;
+        const courses = await courseModel.find(
+            { creatorId: adminId }
+        );
+        res.status(200).json({
+            message: "Courses fetched successfully",
+            data: courses
+        });
+    } catch (err) {
+        console.error('Courses fetch error:', err);
+        res.status(500).json({ error: "An error occurred during courses fetch" });
+    }
+})
 
 module.exports = adminRouter;
